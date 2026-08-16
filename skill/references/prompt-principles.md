@@ -17,7 +17,7 @@ Order the prompt as:
 - Camera: shot type, lens mm, aperture/DoF, angle.
 - Purpose: name the artifact — "hero image", "poster", "app icon", "UI mockup", "infographic". Naming the purpose switches the model's composition mode. Always include it.
 
-Early words carry the most weight in every model — lead with the subject, never with boilerplate.
+Lead with the subject, never with boilerplate. Strict front-loading matters most in Grok and legacy models (Seedream 4.x); the 2026 reasoning flagships read the whole prompt, so completeness beats position. All four honor a placement + font note per quoted text element ("title top-center, bold sans-serif") — give one for every text string.
 
 ## 3. Camera language is the universal composition control
 
@@ -39,7 +39,7 @@ No model of the four has a `negative_prompt` field. Two working substitutes:
 
 ## 6. References are the new style tags
 
-Identity, style, and composition are locked with reference images (`input_references`), not with words. Caps: Gemini up to 14, Seedream 5.0 Pro up to 10, Grok up to 3, GPT Image edits accept several (address them "by index and description"). If a style must be matched precisely, pass a reference instead of describing the style.
+Identity, style, and composition are locked with reference images (`input_references`), not with words. Caps: Gemini up to 14, Seedream 5.0 Pro up to 10, Grok up to 3, GPT Image edits accept several (address them "by index and description"). If a style must be matched precisely, pass a reference instead of describing the style. Assign every reference an explicit role in the prompt ("Image 1 is the product — keep exact; Image 2 sets the style") — all four models bind references more reliably with named roles.
 
 ## 7. Size only via API parameters
 

@@ -38,9 +38,9 @@ Per-job fields override `defaults`. The CLI validates only shapes (types, ranges
 
 ### Aspect ratios (18 values; support varies per model)
 
-`1:1`, `2:3`, `3:2`, `3:4`, `4:3`, `4:5`, `5:4`, `9:16`, `16:9`, `21:9`, `2:1`, `1:2`, `4:1`, `1:4`, `19.5:9`, `9:19.5`, `20:9`, `9:20`
+`1:1`, `2:3`, `3:2`, `3:4`, `4:3`, `4:5`, `5:4`, `9:16`, `16:9`, `21:9`, `2:1`, `1:2`, `4:1`, `1:4`, `19.5:9`, `9:19.5`, `20:9`, `9:20` (plus model-specific extremes like `1:8`/`8:1` — any `W:H` value passes the CLI and is validated by the API per model)
 
-- Gemini supports the first 10; Grok adds the phone formats (`19.5:9`, `9:20`, ...); Seedream is the widest (extreme ratios up to 16:1/1:16).
+- `gemini-3-pro-image` supports the first 10; `gemini-3.1-flash-image` adds extremes `1:4`, `4:1`, `1:8`, `8:1`; Grok adds the phone formats (`19.5:9`, `9:20`, ...); Seedream is the widest (extreme ratios up to 16:1/1:16).
 - **OpenAI caveat**: `openai/gpt-5-image` accepts ONLY `1:1`, `3:2`, `2:3`, `auto` — a 16:9 job fails with HTTP 400. For wide/tall formats use `openai/gpt-image-2` (full set incl. `16:9`, `9:16`, `21:9`).
 - Never encode the aspect ratio in prompt text — parameters only.
 

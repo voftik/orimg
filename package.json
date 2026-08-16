@@ -1,6 +1,6 @@
 {
   "name": "orimg",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Fan-out image generation CLI for OpenRouter: model-specific prompts to multiple top image models, file-first output with manifest and HTML gallery",
   "type": "module",
   "license": "MIT",
