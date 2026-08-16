@@ -1,0 +1,67 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="orimg — one task in, four frontier image models out, keep the best">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="1" stop-color="#101a2e"/>
+    </linearGradient>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="0.5" stop-color="#818cf8"/>
+      <stop offset="1" stop-color="#c084fc"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#6366f1" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#6366f1" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#22d3ee" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#22d3ee" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="300" rx="14" fill="url(#bg)"/>
+  <circle cx="1050" cy="40" r="260" fill="url(#glow)"/>
+  <circle cx="140" cy="290" r="230" fill="url(#glow2)"/>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
+    <text x="64" y="148" font-size="92" font-weight="800" fill="url(#word)" letter-spacing="-2">orimg</text>
+    <text x="70" y="196" font-size="23" fill="#94a3b8" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">One task in. Four frontier image models out. Keep the best.</text>
+  </g>
+
+  <g font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="15">
+    <rect x="66" y="222" width="132" height="32" rx="16" fill="none" stroke="#334155" stroke-width="1.5"/>
+    <text x="132" y="243" fill="#cbd5e1" text-anchor="middle">OpenRouter API</text>
+    <rect x="210" y="222" width="122" height="32" rx="16" fill="none" stroke="#334155" stroke-width="1.5"/>
+    <text x="271" y="243" fill="#cbd5e1" text-anchor="middle">zero-dep CLI</text>
+    <rect x="344" y="222" width="196" height="32" rx="16" fill="none" stroke="#334155" stroke-width="1.5"/>
+    <text x="442" y="243" fill="#cbd5e1" text-anchor="middle">auto-activating agent skill</text>
+  </g>
+
+  <g>
+    <rect x="742" y="128" width="118" height="44" rx="10" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+    <text x="801" y="155" font-size="17" fill="#e2e8f0" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">jobs.json</text>
+
+    <path d="M 862 143 C 920 120, 940 70, 986 56" fill="none" stroke="#22d3ee" stroke-width="2" opacity="0.75"/>
+    <path d="M 862 148 C 915 140, 945 128, 986 122" fill="none" stroke="#818cf8" stroke-width="2" opacity="0.75"/>
+    <path d="M 862 155 C 915 162, 945 180, 986 188" fill="none" stroke="#34d399" stroke-width="2" opacity="0.75"/>
+    <path d="M 862 160 C 920 185, 940 240, 986 252" fill="none" stroke="#f472b6" stroke-width="2" opacity="0.75"/>
+
+    <g font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600">
+      <rect x="990" y="32" width="176" height="46" rx="10" fill="#0f172a" stroke="#164e63" stroke-width="1.5"/>
+      <rect x="990" y="32" width="6" height="46" rx="3" fill="#22d3ee"/>
+      <text x="1010" y="61" fill="#e2e8f0">Seedream 5 Pro</text>
+
+      <rect x="990" y="98" width="176" height="46" rx="10" fill="#0f172a" stroke="#3730a3" stroke-width="1.5"/>
+      <rect x="990" y="98" width="6" height="46" rx="3" fill="#818cf8"/>
+      <text x="1010" y="127" fill="#e2e8f0">Gemini 3 Pro</text>
+
+      <rect x="990" y="164" width="176" height="46" rx="10" fill="#0f172a" stroke="#065f46" stroke-width="1.5"/>
+      <rect x="990" y="164" width="6" height="46" rx="3" fill="#34d399"/>
+      <text x="1010" y="193" fill="#e2e8f0">GPT-5 Image</text>
+
+      <rect x="990" y="230" width="176" height="46" rx="10" fill="#0f172a" stroke="#9d174d" stroke-width="1.5"/>
+      <rect x="990" y="230" width="6" height="46" rx="3" fill="#f472b6"/>
+      <text x="1010" y="259" fill="#e2e8f0">Grok Imagine 2</text>
+    </g>
+  </g>
+</svg>

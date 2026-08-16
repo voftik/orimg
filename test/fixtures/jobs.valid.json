@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "task": "test batch",
+  "defaults": { "aspect_ratio": "1:1", "resolution": "1K", "quality": "medium", "n": 1 },
+  "jobs": [
+    { "model": "mock/good-model", "prompt": "a red circle on a white background" },
+    { "model": "mock/good-model-b", "prompt": "a blue square on a black background", "n": 2 },
+    { "model": "mock/good-model", "prompt": "a green triangle", "quality": "high", "resolution": "2k" },
+    { "model": "mock/good-model-b", "prompt": "a yellow star", "seed": 42 }
+  ]
+}

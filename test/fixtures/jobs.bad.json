@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "task": "",
+  "defaults": { "resolution": "8K" },
+  "jobs": [
+    { "model": "", "prompt": "" },
+    { "model": "mock/no-prompt" },
+    { "model": "mock/bad-params", "prompt": "ok", "n": 99, "quality": "ultra", "aspect_ratio": "wide", "output_format": "bmp", "seed": -5 }
+  ]
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+ai-images/
+.omc/
+.DS_Store
+*.tsbuildinfo
+npm-debug.log*
+
+.playwright-mcp/
