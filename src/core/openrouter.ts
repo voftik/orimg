@@ -265,6 +265,10 @@ export class OpenRouterClient {
     return { ...parsed, via: "chat-fallback", retries: response.retries };
   }
 
+  async checkKey(): Promise<void> {
+    await this.request("/key", { method: "GET" });
+  }
+
   async listModels(): Promise<ImageModel[]> {
     const { res } = await this.request("/images/models", { method: "GET" });
     const parsed: unknown = await res.json();

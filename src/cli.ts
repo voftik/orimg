@@ -15,7 +15,8 @@ Usage:
                  [--quality auto|low|medium|high] [--seed N] [--ref <url|path>]...
   orimg models [<model-id>] [--search TEXT] [--refresh] [--json]
   orimg select <batch-dir|manifest> <model-or-filename> --to <dest-path> [--json]
-  orimg setup [--link] [--remove] [--claude-only|--codex-only] [--json]
+  orimg setup                       interactive wizard (key, skill, defaults)
+  orimg setup --yes [--link] [--remove] [--claude-only|--codex-only] [--json]
   orimg doctor [--json]
 
 Environment:

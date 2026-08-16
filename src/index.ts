@@ -7,7 +7,7 @@ export {
   timestampSlug,
   uniqueName,
 } from "./core/files.js";
-export { CONFIG_DEFAULTS, DEFAULT_BASE_URL, loadConfig, maskApiKey, parseDotEnv } from "./core/config.js";
+export { CONFIG_DEFAULTS, DEFAULT_BASE_URL, configFilePath, loadConfig, maskApiKey, parseDotEnv, saveConfigPatch } from "./core/config.js";
 export type { ConfigContext, ConfigFlags, ConfigResolution } from "./core/config.js";
 export { validateJobsFile } from "./core/jobs.js";
 export type { ValidatedJobs } from "./core/jobs.js";

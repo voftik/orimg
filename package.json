@@ -1,7 +1,7 @@
 {
   "name": "orimg",
-  "version": "0.2.0",
-  "description": "Fan-out image generation CLI for OpenRouter: model-specific prompts to multiple top image models, file-first output with manifest and HTML gallery",
+  "version": "0.3.0",
+  "description": "One task in, four frontier image models out. Multi-model image generation fan-out via OpenRouter — zero-dep CLI + auto-activating agent skill for Claude Code & Codex.",
   "type": "module",
   "license": "MIT",
   "bin": {
@@ -16,21 +16,39 @@
     "skill"
   ],
   "keywords": [
-    "openrouter",
     "image-generation",
+    "openrouter",
+    "claude-code",
+    "codex",
+    "agent-skills",
+    "ai",
     "cli",
-    "fanout",
-    "agent-skill"
+    "seedream",
+    "gemini",
+    "nano-banana",
+    "gpt-image",
+    "grok",
+    "fan-out"
   ],
   "scripts": {
     "build": "tsc --noEmit && tsup",
     "test": "npm run build && node --test test/*.test.mjs",
     "smoke": "SMOKE=1 node test/smoke.real.mjs",
-    "install-skill": "node scripts/install-skill.mjs"
+    "install-skill": "node scripts/install-skill.mjs",
+    "prepublishOnly": "npm run build && node --test test/unit.files.test.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
     "tsup": "^8.3.5",
     "typescript": "^5.7.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/voftik/orimg.git"
+  },
+  "homepage": "https://github.com/voftik/orimg#readme",
+  "bugs": {
+    "url": "https://github.com/voftik/orimg/issues"
+  },
+  "author": "voftik"
 }

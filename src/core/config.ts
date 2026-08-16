@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { chmod, mkdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
 import type { ResolvedConfig } from "../types.js";
@@ -32,6 +32,30 @@ export interface ConfigContext {
 export interface ConfigResolution extends ResolvedConfig {
   apiKeySource: ApiKeySource | null;
   configFile: string;
+}
+
+export function configFilePath(env: NodeJS.ProcessEnv = process.env): string {
+  const dir = env.ORIMG_CONFIG_DIR !== undefined && env.ORIMG_CONFIG_DIR !== ""
+    ? env.ORIMG_CONFIG_DIR
+    : path.join(homedir(), ".config", "orimg");
+  return path.join(dir, "config.json");
+}
+
+export async function saveConfigPatch(
+  patch: Record<string, unknown>,
+  env: NodeJS.ProcessEnv = process.env,
+): Promise<string> {
+  const file = configFilePath(env);
+  await mkdir(path.dirname(file), { recursive: true, mode: 0o700 });
+  const existing = await readJsonObject(file);
+  const merged: Record<string, unknown> = { ...existing };
+  for (const [key, value] of Object.entries(patch)) {
+    if (value === undefined) delete merged[key];
+    else merged[key] = value;
+  }
+  await writeFile(file, `${JSON.stringify(merged, null, 2)}\n`, { mode: 0o600 });
+  await chmod(file, 0o600);
+  return file;
 }
 
 export function parseDotEnv(text: string): Record<string, string> {
