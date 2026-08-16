@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "build": "tsc --noEmit && tsup",
-    "test": "npm run build && node --test \"test/*.test.mjs\"",
+    "test": "npm run build && node --test test/*.test.mjs",
     "smoke": "SMOKE=1 node test/smoke.real.mjs",
     "install-skill": "node scripts/install-skill.mjs"
   },
