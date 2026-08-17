@@ -41,7 +41,7 @@ Google's official rule: **"Describe the scene, don't just list keywords."** A na
 ## Parameters
 
 - `aspect_ratio` (API param): 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9. 3.1-flash additionally supports 1:4, 4:1, 1:8, 8:1 (skyscraper/leaderboard banners).
-- `resolution`: 1K / 2K / 4K (uppercase K; 4K on 3-pro and 3.1-flash only; 2.5-flash caps at 2K). 3.1-flash adds a cheap 512px ("0.5K") draft tier.
+- `resolution`: 1K / 2K / 4K (uppercase K; 4K on 3-pro and 3.1-flash only). 3.1-flash adds a cheap 512px draft tier: pass it as `"512"`, not "0.5K". CAUTION: `gemini-2.5-flash-image` outputs fixed ~1024px and declares NO resolution parameter — do not set one for it (check `orimg models <id>`).
 - No seed support. n=1 — duplicate jobs for variants.
 - On 2.5-flash-image edits, aspect ratio is inherited from the input; if it must not change, say "Do not change the input aspect ratio."
 
@@ -62,7 +62,7 @@ Google's official rule: **"Describe the scene, don't just list keywords."** A na
 
 ### gemini-3.1-flash-image extras
 
-Extreme ratios and 0.5K (above); `thinking_level` knob (minimal by default — raise to high for complex compositions); image-search grounding (`search_types: ["image_search"]`); video input as reference. Workflow: iterate cheap drafts at 0.5K/1K on 3.1-flash, then re-run the winning prompt at 2K/4K.
+Extreme ratios and 512px drafts (above). NOTE on native-API knobs: `thinking_level`, image-search grounding (`search_types`) and video-input references exist only in Google's native Gemini API — OpenRouter's `/images` endpoint does NOT accept them, and orimg's jobs validator rejects unknown fields. Steer those behaviors through prompt text instead (e.g. "Search the web about X and make an infographic" for grounding on models that ground implicitly). Workflow: iterate cheap drafts at 512/1K on 3.1-flash, then re-run the winning prompt at 2K/4K.
 
 ## Strengths / weaknesses
 

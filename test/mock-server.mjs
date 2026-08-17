@@ -6,13 +6,34 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const PX_B64 = readFileSync(path.join(HERE, "fixtures", "px.png.b64"), "utf8").trim();
 
+// Mirrors the live catalog shape: no top-level pricing, `endpoints` is a URL string.
 export const MOCK_MODELS = [
-  { id: "mock/good-model", name: "Mock Good", pricing: { image: "0.04" } },
-  { id: "mock/good-model-b", name: "Mock Good B", pricing: { image: "0.03" } },
-  { id: "mock/rate-limit-model", name: "Mock Rate Limited", pricing: { image: "0.02" } },
-  { id: "mock/fail-500-model", name: "Mock Broken", pricing: { image: "0.01" } },
-  { id: "mock/unpriced-model", name: "Mock Unpriced", pricing: {} },
+  { id: "mock/good-model", name: "Mock Good", endpoints: "/api/v1/images/models/mock/good-model/endpoints" },
+  { id: "mock/good-model-b", name: "Mock Good B", endpoints: "/api/v1/images/models/mock/good-model-b/endpoints" },
+  { id: "mock/rate-limit-model", name: "Mock Rate Limited", endpoints: "/api/v1/images/models/mock/rate-limit-model/endpoints" },
+  { id: "mock/fail-500-model", name: "Mock Broken", endpoints: "/api/v1/images/models/mock/fail-500-model/endpoints" },
+  { id: "mock/unpriced-model", name: "Mock Unpriced", endpoints: "/api/v1/images/models/mock/unpriced-model/endpoints" },
 ];
+
+const MOCK_SUPPORTED_PARAMETERS = {
+  resolution: { type: "enum", values: ["1K", "2K"] },
+  aspect_ratio: { type: "enum", values: ["1:1", "16:9", "9:16", "3:2", "2:3"] },
+  quality: { type: "enum", values: ["auto", "low", "medium", "high"] },
+  output_format: { type: "enum", values: ["png", "jpeg", "webp"] },
+  n: { type: "range", min: 1, max: 4 },
+  input_references: { type: "range", min: 0, max: 14 },
+  seed: { type: "boolean" },
+};
+
+function mockPricingFor(modelId) {
+  if (modelId.includes("unpriced")) return [];
+  const base = modelId.includes("good-model-b") ? 0.03 : modelId.includes("rate-limit") ? 0.02 : 0.04;
+  return [
+    { billable: "output_image", unit: "image", cost_usd: base },
+    { billable: "output_image", unit: "image", cost_usd: base * 2, variant: "high_resolution" },
+    { billable: "input_image", unit: "image", cost_usd: 0.003 },
+  ];
+}
 
 export function createState() {
   return {
@@ -67,6 +88,33 @@ async function handle(req, res, state) {
   if (route === "GET /api/v1/images/models") {
     state.requests.push({ route, model: null });
     json(res, 200, { data: MOCK_MODELS });
+    return;
+  }
+
+  if (route === "GET /api/v1/key") {
+    state.requests.push({ route, model: null });
+    const auth = req.headers.authorization ?? "";
+    if (!auth.startsWith("Bearer ") || auth === "Bearer bad-key") {
+      json(res, 401, { error: { message: "Invalid credentials" } });
+      return;
+    }
+    json(res, 200, { data: { label: "mock-key", usage: 0 } });
+    return;
+  }
+
+  if (req.method === "GET" && /^\/api\/v1\/images\/models\/.+\/endpoints$/.test(url.pathname)) {
+    const modelId = url.pathname.slice("/api/v1/images/models/".length, -"/endpoints".length);
+    state.requests.push({ route: "GET /api/v1/images/models/:id/endpoints", model: modelId });
+    json(res, 200, {
+      id: modelId,
+      endpoints: [
+        {
+          provider_name: "Mock Provider",
+          pricing: mockPricingFor(modelId),
+          supported_parameters: MOCK_SUPPORTED_PARAMETERS,
+        },
+      ],
+    });
     return;
   }
 

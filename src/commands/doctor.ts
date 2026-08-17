@@ -1,6 +1,6 @@
 import { stat } from "node:fs/promises";
 import { loadConfig, maskApiKey } from "../core/config.js";
-import { EXIT, errorMessage } from "../core/errors.js";
+import { AuthError, EXIT, errorMessage } from "../core/errors.js";
 import type { ExitCodeValue } from "../core/errors.js";
 import { OpenRouterClient } from "../core/openrouter.js";
 import {
@@ -34,6 +34,7 @@ export async function cmdDoctor(argv: string[]): Promise<ExitCodeValue> {
     present: boolean;
     source: typeof config.apiKeySource;
     masked: string | null;
+    valid?: boolean | null;
     config_file_mode?: string;
     config_file_permissions_ok?: boolean;
   } = {
@@ -51,19 +52,32 @@ export async function cmdDoctor(argv: string[]): Promise<ExitCodeValue> {
     }
   }
 
+  const client = new OpenRouterClient({
+    apiKey: config.apiKey,
+    baseUrl: config.baseUrl,
+    timeoutMs: 10_000,
+    retries: 0,
+  });
+
+  let apiKeyValid: boolean | null = null;
   let apiReport: { reachable: boolean; models?: number; error?: string };
   try {
-    const client = new OpenRouterClient({
-      apiKey: config.apiKey,
-      baseUrl: config.baseUrl,
-      timeoutMs: 10_000,
-      retries: 0,
-    });
     const models = await client.listModels();
     apiReport = { reachable: true, models: models.length };
   } catch (err) {
     apiReport = { reachable: false, error: errorMessage(err) };
   }
+
+  if (apiKeyReport.present && apiReport.reachable) {
+    try {
+      await client.checkKey();
+      apiKeyValid = true;
+    } catch (err) {
+      if (err instanceof AuthError) apiKeyValid = false;
+      // any other failure leaves validity unknown (null)
+    }
+  }
+  apiKeyReport.valid = apiKeyValid;
 
   const skillReport: Record<string, { installed: boolean; version: string | null; path: string }> = {};
   for (const target of skillTargets()) {
@@ -89,14 +103,31 @@ export async function cmdDoctor(argv: string[]): Promise<ExitCodeValue> {
     versions: { orimg: packageVersion(), node: process.version },
   };
 
+  const keyHealthy = apiKeyReport.present && apiKeyValid !== false;
+  const healthy = keyHealthy && apiReport.reachable;
+  const failCode: ExitCodeValue = !keyHealthy ? EXIT.AUTH : EXIT.UNEXPECTED;
+  const failMessage = !apiKeyReport.present
+    ? "no OpenRouter API key found"
+    : apiKeyValid === false
+      ? "the configured OpenRouter API key was rejected (401/403)"
+      : `API unreachable: ${apiReport.error ?? "unknown error"}`;
+
   if (jsonMode) {
-    printEnvelope(successEnvelope(data));
+    const envelope = successEnvelope(data);
+    if (!healthy) {
+      envelope.success = false;
+      envelope.error = { code: failCode === EXIT.AUTH ? "AUTH" : "UNHEALTHY", message: failMessage };
+    }
+    printEnvelope(envelope);
   } else {
     const mark = (ok: boolean) => (ok ? "[ok]" : "[!!]");
+    const keyStatus = !apiKeyReport.present
+      ? "not found"
+      : `${apiKeyReport.masked} (from ${apiKeyReport.source})${
+          apiKeyValid === true ? ", verified" : apiKeyValid === false ? ", REJECTED by the API" : ""
+        }`;
     const lines = [
-      `${mark(apiKeyReport.present)} api key: ${
-        apiKeyReport.present ? `${apiKeyReport.masked} (from ${apiKeyReport.source})` : "not found"
-      }`,
+      `${mark(keyHealthy)} api key: ${keyStatus}`,
       `${mark(apiReport.reachable)} api: ${
         apiReport.reachable ? `${config.baseUrl} reachable, ${apiReport.models} image models` : (apiReport.error ?? "unreachable")
       }`,
@@ -116,5 +147,5 @@ export async function cmdDoctor(argv: string[]): Promise<ExitCodeValue> {
     printLines(lines);
   }
 
-  return apiKeyReport.present ? EXIT.OK : EXIT.AUTH;
+  return healthy ? EXIT.OK : failCode;
 }

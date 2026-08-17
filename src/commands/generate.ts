@@ -37,7 +37,8 @@ import {
   errorEnvelope,
 } from "../core/cliutil.js";
 import type { FlagValues } from "../core/cliutil.js";
-import { getModels, imagePriceUsd } from "./models.js";
+import { estimateJobCostUsd, getModelEndpoints, preflightWarnings } from "./models.js";
+import type { ModelEndpoint } from "../core/openrouter.js";
 import type { Envelope, FailureRecord, ImageRecord, Job, Manifest, ManifestJob } from "../types.js";
 
 interface JobOutcome {
@@ -209,23 +210,33 @@ async function runDryRun(
   config: ConfigResolution,
   jsonMode: boolean,
 ): Promise<ExitCodeValue> {
-  let priceMap = new Map<string, number | null>();
-  try {
-    const { models } = await getModels(config, {});
-    priceMap = new Map(models.map((m) => [m.id, imagePriceUsd(m)]));
-  } catch {
-    // price estimates stay unknown without model data
-  }
+  const uniqueModels = [...new Set(jobs.map((j) => j.model))];
+  const endpointsByModel = new Map<string, ModelEndpoint[] | null>();
+  await Promise.all(
+    uniqueModels.map(async (model) => {
+      try {
+        endpointsByModel.set(model, await getModelEndpoints(config, model));
+      } catch {
+        endpointsByModel.set(model, null);
+      }
+    }),
+  );
 
   const jobRows = jobs.map((job) => {
     const n = job.n ?? 1;
-    const price = priceMap.get(job.model) ?? null;
+    const endpoints = endpointsByModel.get(job.model) ?? null;
+    const estimate = endpoints === null ? null : estimateJobCostUsd(job, endpoints);
+    const warnings =
+      endpoints === null
+        ? [`could not load capabilities for ${job.model}; parameters were not pre-validated`]
+        : preflightWarnings(job, endpoints);
     return {
       model: job.model,
       n,
       prompt_chars: job.prompt.length,
       params: publicParams(job),
-      estimated_cost_usd: price === null ? null : roundUsd(price * n),
+      estimated_cost_usd: estimate === null ? null : roundUsd(estimate),
+      warnings,
     };
   });
 
@@ -235,6 +246,7 @@ async function runDryRun(
     images: jobRows.reduce((sum, j) => sum + j.n, 0),
     estimated_cost_usd: roundUsd(known.reduce((sum, j) => sum + (j.estimated_cost_usd ?? 0), 0)),
     estimate_complete: known.length === jobRows.length,
+    warnings: jobRows.reduce((sum, j) => sum + j.warnings.length, 0),
   };
 
   if (jsonMode) {
@@ -242,9 +254,11 @@ async function runDryRun(
   } else {
     const rows = [["MODEL", "N", "EST. COST"]];
     for (const j of jobRows) rows.push([j.model, String(j.n), formatUsd(j.estimated_cost_usd)]);
+    const warningLines = jobRows.flatMap((j, i) => j.warnings.map((w) => `warning: jobs[${i}] ${w}`));
     printLines([
       "dry run: jobs are valid, nothing was generated",
       ...renderTable(rows),
+      ...(warningLines.length > 0 ? ["", ...warningLines] : []),
       "",
       `total: ${totals.images} image(s), estimated ${formatUsd(totals.estimated_cost_usd)}${totals.estimate_complete ? "" : " (partial estimate)"}`,
     ]);
@@ -345,7 +359,7 @@ export async function cmdGenerate(argv: string[]): Promise<ExitCodeValue> {
         via: outcome.via,
         retries: outcome.retries,
       };
-      if (job.seed !== undefined) entry.seed = job.seed;
+      if (job.seed !== undefined && outcome.via === "images") entry.seed = job.seed;
       return entry;
     }
     const error = failureByIndex.get(index);
@@ -397,7 +411,7 @@ export async function cmdGenerate(argv: string[]): Promise<ExitCodeValue> {
         params: appliedParams(outcome.job, outcome.via),
         via: outcome.via,
       };
-      if (outcome.job.seed !== undefined) record.seed = outcome.job.seed;
+      if (outcome.job.seed !== undefined && outcome.via === "images") record.seed = outcome.job.seed;
       images.push(record);
     }
   }

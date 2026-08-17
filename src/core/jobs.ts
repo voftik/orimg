@@ -6,6 +6,20 @@ const QUALITIES = new Set(["auto", "low", "medium", "high"]);
 const OUTPUT_FORMATS = new Set(["png", "jpeg", "webp", "svg"]);
 const ASPECT_RE = /^\d{1,3}(\.\d{1,2})?:\d{1,3}(\.\d{1,2})?$/;
 
+const PARAM_FIELDS = ["n", "resolution", "aspect_ratio", "quality", "output_format", "background", "seed", "input_references"];
+const JOB_FIELDS = new Set(["model", "prompt", ...PARAM_FIELDS]);
+const DEFAULTS_FIELDS = new Set(PARAM_FIELDS);
+
+function checkUnknownFields(obj: Record<string, unknown>, allowed: Set<string>, label: string, errors: string[]): void {
+  for (const key of Object.keys(obj)) {
+    if (!allowed.has(key)) {
+      errors.push(
+        `${label}: unknown field "${key}" — orimg only sends fields the /images API accepts (${[...allowed].join(", ")}); model-native knobs like thinking_level or web_search cannot be passed through`,
+      );
+    }
+  }
+}
+
 export interface ValidatedJobs {
   task?: string;
   jobs: Job[];
@@ -97,8 +111,11 @@ export function validateJobsFile(rawInput: unknown): ValidatedJobs {
 
   let defaults: GenParams = {};
   if (input.defaults !== undefined) {
-    if (isRecord(input.defaults)) defaults = checkParams(dropNulls(input.defaults), "defaults", errors);
-    else errors.push('"defaults" must be an object');
+    if (isRecord(input.defaults)) {
+      const cleanDefaults = dropNulls(input.defaults);
+      checkUnknownFields(cleanDefaults, DEFAULTS_FIELDS, "defaults", errors);
+      defaults = checkParams(cleanDefaults, "defaults", errors);
+    } else errors.push('"defaults" must be an object');
   }
 
   const jobs: Job[] = [];
@@ -112,6 +129,7 @@ export function validateJobsFile(rawInput: unknown): ValidatedJobs {
         return;
       }
       const raw = dropNulls(rawJob);
+      checkUnknownFields(raw, JOB_FIELDS, label, errors);
       const model = typeof raw.model === "string" && raw.model.trim() !== "" ? raw.model.trim() : undefined;
       if (model === undefined) errors.push(`${label}: "model" must be a non-empty string`);
       const prompt = typeof raw.prompt === "string" && raw.prompt.trim() !== "" ? raw.prompt : undefined;

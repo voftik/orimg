@@ -33,6 +33,13 @@ export interface GenerateResult {
   retries: number;
 }
 
+export interface ModelEndpoint {
+  provider_name?: string;
+  pricing?: unknown;
+  supported_parameters?: unknown;
+  [key: string]: unknown;
+}
+
 export interface ImageModel {
   id: string;
   name?: string;
@@ -267,6 +274,13 @@ export class OpenRouterClient {
 
   async checkKey(): Promise<void> {
     await this.request("/key", { method: "GET" });
+  }
+
+  async modelEndpoints(modelId: string): Promise<ModelEndpoint[]> {
+    const { res } = await this.request(`/images/models/${modelId}/endpoints`, { method: "GET" });
+    const parsed: unknown = await res.json();
+    if (!isRecord(parsed) || !Array.isArray(parsed.endpoints)) return [];
+    return parsed.endpoints.filter((e): e is ModelEndpoint => isRecord(e));
   }
 
   async listModels(): Promise<ImageModel[]> {

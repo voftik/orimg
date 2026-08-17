@@ -28,7 +28,7 @@ Parameter support differs per model — the CLI validates, but check `orimg mode
 
 | Model ID | ~$/image | Notes |
 |---|---|---|
-| `google/gemini-2.5-flash-image` | ~$0.04 | "Nano Banana", previous gen; up to 2K; solid all-rounder for drafts; same Gemini dialect |
+| `google/gemini-2.5-flash-image` | ~$0.04 | "Nano Banana", previous gen; fixed ~1024px output (declares NO resolution parameter — don't set one); solid all-rounder for drafts; same Gemini dialect |
 | `google/gemini-3.1-flash-image` | ~$0.07 | "Nano Banana 2"; up to 4K, 14 refs; best cheap option for text rendering |
 | `bytedance-seed/seedream-5-0-lite` | ~$0.035 | 2K/4K, n up to 4; cheap Seedream-dialect batches |
 | `openai/gpt-5-image-mini` | ~$0.01–0.03 | Cheap drafts with GPT-dialect instruction following |

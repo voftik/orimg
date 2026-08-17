@@ -1,4 +1,4 @@
-import { copyFile, mkdir, stat } from "node:fs/promises";
+import { copyFile, mkdir, realpath, stat } from "node:fs/promises";
 import path from "node:path";
 import { EXIT, ValidationError } from "../core/errors.js";
 import type { ExitCodeValue } from "../core/errors.js";
@@ -72,6 +72,19 @@ export async function cmdSelect(argv: string[]): Promise<ExitCodeValue> {
   const rel = path.relative(batchDir, source);
   if (rel.startsWith("..") || path.isAbsolute(rel)) {
     throw new ValidationError(`manifest entry "${match.file}" points outside the batch directory`);
+  }
+  // Lexical checks pass through symlinks — compare resolved paths too.
+  let realSource: string;
+  let realBatch: string;
+  try {
+    realBatch = await realpath(batchDir);
+    realSource = await realpath(source);
+  } catch {
+    throw new ValidationError(`file "${match.file}" is missing from the batch directory`);
+  }
+  const realRel = path.relative(realBatch, realSource);
+  if (realRel.startsWith("..") || path.isAbsolute(realRel)) {
+    throw new ValidationError(`manifest entry "${match.file}" resolves outside the batch directory`);
   }
   let dest = path.resolve(to);
   try {
