@@ -76,9 +76,7 @@ One brief — *"a tiny robot artist painting the same sunset in four styles"* �
 | ![Gemini 3 Pro](docs/assets/showcase/gemini-3-pro.jpg) | ![Gemini 3.1 Flash](docs/assets/showcase/gemini-3-1-flash.jpg) | ![Gemini 2.5 Flash](docs/assets/showcase/gemini-2-5-flash.jpg) |
 | Precise brief adherence: exactly 4 easels, 4 distinct styles | Richer character, denser scene | Went minimalist — and painted **5** easels |
 
-Same words, three different artists — this is exactly why you fan out instead of betting on one model. Every batch also gets a self-contained comparison gallery:
-
-<p align="center"><img src="docs/assets/gallery.png" alt="orimg comparison gallery" width="70%"></p>
+Same words, three different artists — this is exactly why you fan out instead of betting on one model. Every batch also gets a self-contained `index.html` comparison gallery with per-variant prompts, parameters, real costs and timings.
 
 ## Why this exists
 
