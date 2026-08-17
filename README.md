@@ -10,6 +10,7 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/orimg"><img src="https://img.shields.io/npm/v/orimg.svg?color=cb3837" alt="npm"></a>
   <a href="https://github.com/voftik/orimg/actions/workflows/ci.yml"><img src="https://github.com/voftik/orimg/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/node-%3E%3D20-brightgreen" alt="Node >= 20">
