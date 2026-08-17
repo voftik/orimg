@@ -43,6 +43,11 @@ async function main(argv: string[]): Promise<number> {
     return EXIT.OK;
   }
 
+  if (rest.includes("--help") || rest.includes("-h")) {
+    process.stdout.write(`${USAGE}\n`);
+    return EXIT.OK;
+  }
+
   switch (command) {
     case "generate":
       return cmdGenerate(rest);

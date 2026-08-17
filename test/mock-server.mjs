@@ -148,6 +148,35 @@ async function handle(req, res, state) {
       json(res, 500, { error: { message: "Internal provider error" } });
       return;
     }
+    if (model.includes("c1-error")) {
+      json(res, 400, { error: { message: "provider says \u009b[31mnope\u009b[0m stop" } });
+      return;
+    }
+    if (model.includes("retry-then-slow-body")) {
+      if (attempts < 2) {
+        json(res, 429, { error: { message: "Rate limited" } }, { "Retry-After": "0" });
+        return;
+      }
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.write('{"data":[{"b64_json":"');
+      return; // stall the body forever; the client's timeout must fire
+    }
+    if (model.includes("fail-503-once")) {
+      if (attempts < 2) {
+        json(res, 503, { error: { message: "upstream unavailable" } }, { "Retry-After": "0" });
+        return;
+      }
+      imageSuccess(res, body.n ?? 1, 0.04);
+      return;
+    }
+    if (model.includes("fail-529-once")) {
+      if (attempts < 2) {
+        json(res, 529, { error: { message: "provider overloaded" } }, { "Retry-After": "0" });
+        return;
+      }
+      imageSuccess(res, body.n ?? 1, 0.04);
+      return;
+    }
     if (model.includes("reset-once")) {
       if (attempts < 2) {
         req.socket.destroy();

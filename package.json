@@ -1,7 +1,7 @@
 {
   "name": "orimg",
   "version": "0.4.2",
-  "description": "One task in, four frontier image models out. Multi-model image generation fan-out via OpenRouter — zero-dep CLI + auto-activating agent skill for Claude Code & Codex.",
+  "description": "One task in, four frontier image models out. Multi-model image generation fan-out via OpenRouter \u2014 zero-dep CLI + auto-activating agent skill for Claude Code & Codex.",
   "type": "module",
   "license": "MIT",
   "bin": {
@@ -35,7 +35,8 @@
     "test": "npm run build && node --test test/*.test.mjs",
     "smoke": "SMOKE=1 node test/smoke.real.mjs",
     "install-skill": "node scripts/install-skill.mjs",
-    "prepublishOnly": "npm run build && node --test test/unit.files.test.mjs"
+    "prepublishOnly": "npm test",
+    "test:coverage": "npm run build && node --test --experimental-test-coverage --test-coverage-lines=68 --test-coverage-branches=65 test/*.test.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

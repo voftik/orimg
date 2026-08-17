@@ -64,7 +64,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function sanitizeControlChars(s: string): string {
-  return s.replace(/[\u0000-\u0008\u000b-\u001f\u007f]/g, "");
+  // C0 controls (except tab/newline), DEL, and C1 controls (0x80-0x9F incl. CSI U+009B)
+  return s.replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "");
 }
 
 async function extractErrorMessage(res: Response): Promise<string> {
@@ -211,7 +212,7 @@ export class OpenRouterClient {
 
     try {
       const { res, retries } = await this.request("/images", { method: "POST", body });
-      const parsed = await parseImagesResponse(res).catch((err: unknown) => this.rethrowBodyAbort(err, 0));
+      const parsed = await parseImagesResponse(res).catch((err: unknown) => this.rethrowBodyAbort(err, retries));
       return { ...parsed, via: "images", retries };
     } catch (err) {
       if (err instanceof ApiError && err.status === 404) {

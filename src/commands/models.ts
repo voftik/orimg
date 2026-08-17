@@ -179,7 +179,9 @@ export function estimateJobCostUsd(
   job: { resolution?: string; n?: number; input_references?: string[] },
   endpoints: ModelEndpoint[],
 ): number | null {
-  const pricing = pricingEntries(endpoints);
+  const pricing = pricingEntries(endpoints).filter((p) => p.unit === "image");
+  // Token-billed models (unit: "token", e.g. Gemini) cannot be estimated before
+  // generation — an honest null beats a wrong number.
   const output = pricing.filter((p) => p.billable === "output_image");
   if (output.length === 0) return null;
 

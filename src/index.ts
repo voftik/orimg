@@ -16,7 +16,15 @@ export { MANIFEST_NAME, readManifest, writeManifest } from "./core/manifest.js";
 export { fanout } from "./core/fanout.js";
 export { OpenRouterClient, parseDataUrl } from "./core/openrouter.js";
 export type { ImageModel, ImageRequest } from "./core/openrouter.js";
-export { getModels, imagePriceUsd, modelsCacheFile } from "./commands/models.js";
+export {
+  endpointsCacheFile,
+  estimateJobCostUsd,
+  getModelEndpoints,
+  getModels,
+  imagePriceUsd,
+  modelsCacheFile,
+  preflightWarnings,
+} from "./commands/models.js";
 export { installedSkillVersion, skillTargets, SKILL_MARKER_RE } from "./commands/setup.js";
 export { ApiError, AuthError, CliError, EXIT, TimeoutError, ValidationError } from "./core/errors.js";
 export { roundUsd } from "./core/cliutil.js";

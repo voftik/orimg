@@ -12,8 +12,22 @@ interface Match {
   file: string;
 }
 
+function isUsableJob(j: unknown): j is ManifestJob {
+  return (
+    typeof j === "object" &&
+    j !== null &&
+    typeof (j as ManifestJob).model === "string" &&
+    (j as ManifestJob).status === "ok" &&
+    Array.isArray((j as ManifestJob).files) &&
+    (j as ManifestJob).files.every((f) => typeof f === "string" && f !== "")
+  );
+}
+
 function findMatch(jobs: ManifestJob[], pick: string): Match {
-  const okJobs = jobs.filter((j) => j.status === "ok" && j.files.length > 0);
+  if (!Array.isArray(jobs)) {
+    throw new ValidationError("manifest is corrupt: \"jobs\" is not an array");
+  }
+  const okJobs = jobs.filter(isUsableJob).filter((j) => j.files.length > 0);
   if (okJobs.length === 0) {
     throw new ValidationError("this batch has no successful images to select from");
   }

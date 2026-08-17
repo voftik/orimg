@@ -1,0 +1,231 @@
+{
+ "recorded_at": "2026-08-17",
+ "source": "GET https://openrouter.ai/api/v1/images/models (trimmed to 4 models)",
+ "total_models_at_recording": 43,
+ "data": [
+  {
+   "id": "bytedance-seed/seedream-5-0-pro",
+   "name": "ByteDance Seed: Seedream 5.0 Pro",
+   "description": "Seedream 5.0 Pro is an image generation and editing model from ByteDance Seed. I",
+   "created": 1786578139,
+   "architecture": {
+    "input_modalities": [
+     "text",
+     "image"
+    ],
+    "output_modalities": [
+     "image"
+    ]
+   },
+   "supported_parameters": {
+    "resolution": {
+     "type": "enum",
+     "values": [
+      "1K",
+      "2K"
+     ]
+    },
+    "aspect_ratio": {
+     "type": "enum",
+     "values": [
+      "1:1",
+      "1:2",
+      "2:1",
+      "2:3",
+      "3:2",
+      "3:4",
+      "4:3",
+      "4:5",
+      "5:4",
+      "9:16",
+      "16:9",
+      "9:19.5",
+      "19.5:9",
+      "9:20",
+      "20:9",
+      "9:21",
+      "21:9",
+      "auto"
+     ]
+    },
+    "n": {
+     "type": "range",
+     "min": 1,
+     "max": 1
+    },
+    "input_references": {
+     "type": "range",
+     "min": 0,
+     "max": 14
+    },
+    "seed": {
+     "type": "boolean"
+    }
+   },
+   "supports_streaming": false,
+   "endpoints": "/api/v1/images/models/bytedance-seed/seedream-5-0-pro/endpoints"
+  },
+  {
+   "id": "openai/gpt-image-2",
+   "name": "OpenAI: GPT Image 2",
+   "description": "OpenAI's latest image generation model. Supports high-fidelity image generation ",
+   "created": 1782264714,
+   "architecture": {
+    "input_modalities": [
+     "text",
+     "image"
+    ],
+    "output_modalities": [
+     "image"
+    ]
+   },
+   "supported_parameters": {
+    "aspect_ratio": {
+     "type": "enum",
+     "values": [
+      "1:1",
+      "3:2",
+      "2:3",
+      "4:3",
+      "3:4",
+      "16:9",
+      "9:16",
+      "21:9",
+      "auto"
+     ]
+    },
+    "quality": {
+     "type": "enum",
+     "values": [
+      "auto",
+      "low",
+      "medium",
+      "high"
+     ]
+    },
+    "background": {
+     "type": "enum",
+     "values": [
+      "auto",
+      "opaque"
+     ]
+    },
+    "n": {
+     "type": "range",
+     "min": 1,
+     "max": 10
+    },
+    "input_references": {
+     "type": "range",
+     "min": 0,
+     "max": 16
+    },
+    "output_compression": {
+     "type": "range",
+     "min": 0,
+     "max": 100
+    }
+   },
+   "supports_streaming": true,
+   "endpoints": "/api/v1/images/models/openai/gpt-image-2/endpoints"
+  },
+  {
+   "id": "google/gemini-3-pro-image",
+   "name": "Google: Nano Banana Pro (Gemini 3 Pro Image)",
+   "description": "Nano Banana Pro is Google\u2019s most advanced image-generation and editing model, bu",
+   "created": 1781754054,
+   "architecture": {
+    "input_modalities": [
+     "image",
+     "text"
+    ],
+    "output_modalities": [
+     "image",
+     "text"
+    ]
+   },
+   "supported_parameters": {
+    "resolution": {
+     "type": "enum",
+     "values": [
+      "1K",
+      "2K",
+      "4K"
+     ]
+    },
+    "aspect_ratio": {
+     "type": "enum",
+     "values": [
+      "1:1",
+      "2:3",
+      "3:2",
+      "3:4",
+      "4:3",
+      "4:5",
+      "5:4",
+      "9:16",
+      "16:9",
+      "21:9"
+     ]
+    },
+    "n": {
+     "type": "range",
+     "min": 1,
+     "max": 1
+    },
+    "input_references": {
+     "type": "range",
+     "min": 0,
+     "max": 14
+    }
+   },
+   "supports_streaming": false,
+   "endpoints": "/api/v1/images/models/google/gemini-3-pro-image/endpoints"
+  },
+  {
+   "id": "google/gemini-2.5-flash-image",
+   "name": "Google: Nano Banana (Gemini 2.5 Flash Image)",
+   "description": "Gemini 2.5 Flash Image, a.k.a. \"Nano Banana,\" is now generally available. It is ",
+   "created": 1759870431,
+   "architecture": {
+    "input_modalities": [
+     "image",
+     "text"
+    ],
+    "output_modalities": [
+     "image",
+     "text"
+    ]
+   },
+   "supported_parameters": {
+    "aspect_ratio": {
+     "type": "enum",
+     "values": [
+      "1:1",
+      "2:3",
+      "3:2",
+      "3:4",
+      "4:3",
+      "4:5",
+      "5:4",
+      "9:16",
+      "16:9",
+      "21:9"
+     ]
+    },
+    "n": {
+     "type": "range",
+     "min": 1,
+     "max": 1
+    },
+    "input_references": {
+     "type": "range",
+     "min": 0,
+     "max": 3
+    }
+   },
+   "supports_streaming": false,
+   "endpoints": "/api/v1/images/models/google/gemini-2.5-flash-image/endpoints"
+  }
+ ]
+}
