@@ -29,7 +29,7 @@ $ orimg generate --jobs jobs.json
 
   ✓ bytedance-seed/seedream-5-0-pro     hero-seedream-5-0-pro-1.png     $0.045   14.2s
   ✓ google/gemini-3-pro-image           hero-gemini-3-pro-image-1.png   $0.134   11.8s
-  ✓ openai/gpt-image-2                  hero-gpt-image-2-1.png          $0.120   21.4s
+  ✓ openai/gpt-5.4-image-2              hero-gpt-5-4-image-2-1.png      $0.120   21.4s
   ✓ x-ai/grok-imagine-image-2.0         hero-grok-imagine-2-0-1.png     $0.041    6.9s
 
   4/4 models · total $0.387 · gallery: ai-images/20260817-hero/index.html
@@ -131,7 +131,7 @@ Full fan-out — one prompt **per model**, each in its dialect:
       "prompt": "A wide cinematic hero illustration for a developer-tools landing page. Foreground: ... (organized narrative, up to 600 words)" },
     { "model": "google/gemini-3-pro-image",
       "prompt": "A photorealistic wide shot of a minimal workspace at golden hour. The scene features ... Shot from a low angle with a 35mm lens." },
-    { "model": "openai/gpt-image-2",
+    { "model": "openai/gpt-5.4-image-2",
       "prompt": "SCENE: minimal developer workspace...\nSTYLE: editorial, muted palette\nCONSTRAINTS: no people, no readable text\nPURPOSE: website hero, right side reserved for headline" },
     { "model": "x-ai/grok-imagine-image-2.0",
       "prompt": "Photorealistic photograph of a minimal workspace at dawn, shot on a Canon EOS R5, 35mm f/2.0, soft directional window light..." }
@@ -217,7 +217,7 @@ The skill ships with battle-tested, sourced prompt-engineering guides the agent 
 |---|---|---|
 | `bytedance-seed/seedream-5-0-pro` | ~$0.045 | Poster-grade layouts, typography in 14 languages |
 | `google/gemini-3-pro-image` | ~$0.134 | Best text rendering &amp; infographics, 14 reference images |
-| `openai/gpt-image-2` | ~$0.03–0.13 | Strictest instruction following, arbitrary dimensions, identity-preserving edits |
+| `openai/gpt-5.4-image-2` | ~$0.05–0.19 | Newest GPT-5 hybrid: strictest instruction following, full aspect-ratio set, identity-preserving edits |
 | `x-ai/grok-imagine-image-2.0` | ~$0.041 | Fast, cheap, social formats, creative moods |
 
 Swap any of them: every OpenRouter image model ID works, including budget stars like `google/gemini-2.5-flash-image` (~$0.04). See [model-guide.md](skill/references/model-guide.md).

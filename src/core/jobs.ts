@@ -15,6 +15,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
+// Agents routinely emit `"field": null` to mean "no value" — treat null exactly
+// like an absent field everywhere instead of failing validation.
+function dropNulls(record: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(record)) {
+    if (value !== null) out[key] = value;
+  }
+  return out;
+}
+
 function checkParams(obj: Record<string, unknown>, label: string, errors: string[]): GenParams {
   const p: GenParams = {};
 
@@ -71,8 +81,9 @@ function checkParams(obj: Record<string, unknown>, label: string, errors: string
   return p;
 }
 
-export function validateJobsFile(input: unknown): ValidatedJobs {
-  if (!isRecord(input)) throw new ValidationError("jobs file must be a JSON object");
+export function validateJobsFile(rawInput: unknown): ValidatedJobs {
+  if (!isRecord(rawInput)) throw new ValidationError("jobs file must be a JSON object");
+  const input = dropNulls(rawInput);
 
   const errors: string[] = [];
 
@@ -86,7 +97,7 @@ export function validateJobsFile(input: unknown): ValidatedJobs {
 
   let defaults: GenParams = {};
   if (input.defaults !== undefined) {
-    if (isRecord(input.defaults)) defaults = checkParams(input.defaults, "defaults", errors);
+    if (isRecord(input.defaults)) defaults = checkParams(dropNulls(input.defaults), "defaults", errors);
     else errors.push('"defaults" must be an object');
   }
 
@@ -94,12 +105,13 @@ export function validateJobsFile(input: unknown): ValidatedJobs {
   if (!Array.isArray(input.jobs) || input.jobs.length === 0) {
     errors.push('"jobs" must be a non-empty array');
   } else {
-    input.jobs.forEach((raw, i) => {
+    input.jobs.forEach((rawJob, i) => {
       const label = `jobs[${i}]`;
-      if (!isRecord(raw)) {
+      if (!isRecord(rawJob)) {
         errors.push(`${label} must be an object`);
         return;
       }
+      const raw = dropNulls(rawJob);
       const model = typeof raw.model === "string" && raw.model.trim() !== "" ? raw.model.trim() : undefined;
       if (model === undefined) errors.push(`${label}: "model" must be a non-empty string`);
       const prompt = typeof raw.prompt === "string" && raw.prompt.trim() !== "" ? raw.prompt : undefined;

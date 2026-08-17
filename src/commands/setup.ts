@@ -182,7 +182,7 @@ async function runWizard(preset: { link: boolean; claudeOnly: boolean; codexOnly
 
   // Step 3: default model lineup
   const lineup = await askChoice("Default fan-out lineup (used when the agent or jobs file does not specify models):", [
-    "Flagship four — seedream-5-0-pro, gemini-3-pro-image, gpt-image-2, grok-imagine-image-2.0 (~$0.38/batch)",
+    "Flagship four — seedream-5-0-pro, gemini-3-pro-image (Nano Banana Pro), gpt-5.4-image-2, grok-imagine-image-2.0 (~$0.4/batch)",
     "Budget duo — gemini-2.5-flash-image, grok-imagine-image-2.0 (~$0.08/batch)",
     "Decide per task (keep unset)",
   ], 0);
@@ -191,7 +191,7 @@ async function runWizard(preset: { link: boolean; claudeOnly: boolean; codexOnly
       models: [
         "bytedance-seed/seedream-5-0-pro",
         "google/gemini-3-pro-image",
-        "openai/gpt-image-2",
+        "openai/gpt-5.4-image-2",
         "x-ai/grok-imagine-image-2.0",
       ],
     });

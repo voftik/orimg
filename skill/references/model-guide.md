@@ -8,7 +8,7 @@ Exact OpenRouter model IDs, prices, and routing rules. Prices are approximate pe
 |---|---|---|---|---|
 | `bytedance-seed/seedream-5-0-pro` | ~$0.045 | Layout-aware posters/grids, typography in 14 languages, reference/face consistency, engineered-imperfection realism, cheap | Overloaded multi-object scenes, tiny dense text, skin oversmoothing without anti-gloss cues | Posters, typography, brand layouts, photoreal portraits, anything reference-driven |
 | `google/gemini-3-pro-image` | ~$0.13 (1K/2K), ~$0.24 (4K) | Best-in-class text rendering and infographics, world knowledge, multi-turn conversational editing, up to 14 refs, 4K | Complex typography may need iterations; thinking adds latency (interim thought images are free, only the final frame is billed); mandatory SynthID watermark | Infographics, diagrams, text-heavy designs, edits over several turns, real-world knowledge scenes |
-| `openai/gpt-5-image` | ~$0.04 medium / ~$0.17 high | Best instruction following (10–20 distinct objects), excellent text, UI mockups, identity preservation in edits | Most expensive at high quality, slower, variance above 2K, camera params approximate | Strict multi-object briefs, UI/product mockups, dense infographics, identity-sensitive edits |
+| `openai/gpt-5.4-image-2` | ~$0.05–0.19 (token-billed) | Newest GPT-5-family hybrid (reasoning + generation): best instruction following, excellent text, FULL aspect-ratio set incl. 16:9/9:16/21:9, n up to 10, 16 refs | Priciest at high quality, slower, camera params approximate | Strict multi-object briefs, UI/product mockups, dense infographics, identity-sensitive edits — the default OpenAI slot |
 | `x-ai/grok-imagine-image-2.0` | ~$0.04 | Fast, cheap, strong typography (top-2 on text-rendering arenas), phone/social aspect ratios (9:16, 9:20, 19.5:9), creative flexibility, fewer refusals, pairs with Grok video | Drifts to anime/illustration without a photo anchor; non-Latin text unreliable; style transfer from refs weak; local edits can mis-anchor; quality caps at medium | Cheap drafts, social-media formats, budget typography, moody/creative shots, photorealism with a proper photo anchor |
 
 ## Capabilities (via OpenRouter `/api/v1/images`)
@@ -17,7 +17,8 @@ Exact OpenRouter model IDs, prices, and routing rules. Prices are approximate pe
 |---|---|---|---|---|---|
 | seedream-5-0-pro | 1 | 1K/2K | yes | yes | 10 (docs; catalog reports up to 14) |
 | gemini-3-pro-image | 1 | 1K/2K/4K | — | no | 14 |
-| gpt-5-image | 1–10 | AR only 1:1/3:2/2:3/auto | low/medium/high/auto | no | 16 |
+| gpt-5.4-image-2 | 1–10 | full AR set incl. 16:9/9:16/21:9 | low/medium/high/auto | no | 16 |
+| gpt-5-image (older) | 1–10 | AR only 1:1/3:2/2:3/auto | low/medium/high/auto | no | 16 |
 | gpt-image-2 | 1–10 | full AR set incl. 16:9/9:16/21:9 | low/medium/high/auto | no | 16 |
 | grok-imagine-image-2.0 | 1 | 1K/2K | low/medium | no | 3 |
 
@@ -31,7 +32,10 @@ Parameter support differs per model — the CLI validates, but check `orimg mode
 | `google/gemini-3.1-flash-image` | ~$0.07 | "Nano Banana 2"; up to 4K, 14 refs; best cheap option for text rendering |
 | `bytedance-seed/seedream-5-0-lite` | ~$0.035 | 2K/4K, n up to 4; cheap Seedream-dialect batches |
 | `openai/gpt-5-image-mini` | ~$0.01–0.03 | Cheap drafts with GPT-dialect instruction following |
-| `openai/gpt-image-2` | ~25% cheaper than gpt-5-image | Dedicated image model, arbitrary dimensions; see `gpt-5-image.md` for differences |
+| `openai/gpt-image-2` | ~25% cheaper than gpt-5.4 | Dedicated image model (no reasoning pass), full AR set; see `gpt-5-image.md` for differences |
+| `openai/gpt-5-image` | ~$0.04–0.17 | Previous GPT-5 hybrid; AR limited to 1:1/3:2/2:3/auto |
+
+Note: "Seedance" (`bytedance-seed/seedance-*`) is ByteDance's VIDEO model family — it does not appear in the image catalog. For images the ByteDance slot is always Seedream.
 
 ## Scenario routing
 

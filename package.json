@@ -1,6 +1,6 @@
 {
   "name": "orimg",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "One task in, four frontier image models out. Multi-model image generation fan-out via OpenRouter — zero-dep CLI + auto-activating agent skill for Claude Code & Codex.",
   "type": "module",
   "license": "MIT",

@@ -21,6 +21,27 @@ test("ORIMG_BASE_URL from ./.env is ignored (key exfiltration guard)", async () 
   assert.equal(resolved.baseUrl, DEFAULT_BASE_URL);
 });
 
+test("null values are treated as absent fields (agents emit them constantly)", () => {
+  const result = validateJobsFile({
+    schema_version: 1,
+    task: null,
+    defaults: { aspect_ratio: "16:9", seed: null, quality: null },
+    jobs: [
+      { model: "m/m", prompt: "p", seed: null, aspect_ratio: null, input_references: null, background: null },
+    ],
+  });
+  assert.equal(result.task, undefined);
+  assert.equal(result.jobs[0].seed, undefined);
+  assert.equal(result.jobs[0].quality, undefined);
+  assert.equal(result.jobs[0].input_references, undefined);
+  assert.equal(result.jobs[0].aspect_ratio, "16:9");
+});
+
+test("defaults set to null is treated as no defaults", () => {
+  const result = validateJobsFile({ schema_version: 1, defaults: null, jobs: [{ model: "m/m", prompt: "p" }] });
+  assert.equal(result.jobs.length, 1);
+});
+
 test("phone aspect ratios with decimals pass validation", () => {
   for (const ar of ["19.5:9", "9:19.5", "16:9", "1:1"]) {
     const result = validateJobsFile({

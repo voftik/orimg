@@ -31,7 +31,7 @@ Choose from this table. Set size ONLY via API parameters — NEVER put dimension
 Full parameter and CLI reference: `references/api-parameters.md`.
 
 ### 3. Pick models
-Default fan-out four: `bytedance-seed/seedream-5-0-pro`, `google/gemini-3-pro-image`, `openai/gpt-image-2`, `x-ai/grok-imagine-image-2.0`. Adjust the set using `references/model-guide.md` — e.g. typography-heavy posters favor Seedream + Gemini Pro; strict multi-object instructions favor GPT Image; cheap drafts and social formats favor Grok / Gemini Flash. For drafts, 2 cheap models are enough; for a final deliverable keep 3–4. CAUTION: `openai/gpt-5-image` accepts only `1:1`/`3:2`/`2:3`/`auto` aspect ratios — for 16:9, 9:16 or other wide/tall formats the OpenAI slot must be `openai/gpt-image-2`.
+Default fan-out four (current flagships): `bytedance-seed/seedream-5-0-pro` (Seedream 5 Pro), `google/gemini-3-pro-image` (Nano Banana Pro), `openai/gpt-5.4-image-2` (GPT-5.4 Image, full aspect-ratio set), `x-ai/grok-imagine-image-2.0` (Grok Imagine 2). Adjust the set using `references/model-guide.md` — e.g. typography-heavy posters favor Seedream + Gemini Pro; strict multi-object instructions favor the GPT slot; cheap drafts and social formats favor Grok / Gemini Flash. For drafts, 2 cheap models are enough; for a final deliverable keep 3–4. CAUTION: the older `openai/gpt-5-image` accepts only `1:1`/`3:2`/`2:3`/`auto` aspect ratios — for wide/tall formats keep `gpt-5.4-image-2` or `gpt-image-2` in the OpenAI slot. "Seedance" is ByteDance's VIDEO model, not an image model — for images the ByteDance slot is always Seedream.
 
 ### 4. Write ONE prompt PER model, in its dialect
 First read `references/prompt-principles.md`, then the dialect file for EVERY chosen model (`references/seedream-5-pro.md`, `references/gemini-3-pro-image.md`, `references/gpt-5-image.md`, `references/grok-imagine-2.md`). Never reuse a single universal prompt across models — the dialects differ materially (Seedream wants a long organized narrative, GPT Image wants labeled sections, Grok needs a photo anchor in the first words, Gemini wants Google's narrative templates).
@@ -47,7 +47,7 @@ Write a jobs file and run the CLI:
   "jobs": [
     { "model": "bytedance-seed/seedream-5-0-pro", "prompt": "<Seedream dialect>" },
     { "model": "google/gemini-3-pro-image", "prompt": "<Gemini dialect>" },
-    { "model": "openai/gpt-image-2", "prompt": "<labeled sections>" },
+    { "model": "openai/gpt-5.4-image-2", "prompt": "<labeled sections>" },
     { "model": "x-ai/grok-imagine-image-2.0", "prompt": "<photo anchor first>" }
   ]
 }

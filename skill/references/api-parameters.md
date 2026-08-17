@@ -34,7 +34,7 @@ The jobs file is the canonical way to run a fan-out: each model gets its OWN pro
 | `jobs[].seed` | number | Reproducibility, where supported (Seedream yes; Gemini/Grok no) |
 | `jobs[].input_references` | string[] | Local paths or URLs for image-to-image / editing; the CLI base64-encodes local files. Per-model caps: 3–16 |
 
-Per-job fields override `defaults`. The CLI validates only shapes (types, ranges); per-model parameter support is enforced by the API and reported as an HTTP 400 in `failed[]`. Check `orimg models <model-id>` for the authoritative `supported_parameters` BEFORE building jobs for unfamiliar models.
+Per-job fields override `defaults`. Omit fields you do not use — `null` is accepted and treated exactly like an absent field (so `"seed": null` is fine), but plain omission is cleaner. The CLI validates only shapes (types, ranges); per-model parameter support is enforced by the API and reported as an HTTP 400 in `failed[]`. Check `orimg models <model-id>` for the authoritative `supported_parameters` BEFORE building jobs for unfamiliar models.
 
 ### Aspect ratios (18 values; support varies per model)
 
