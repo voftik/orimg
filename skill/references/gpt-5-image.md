@@ -1,6 +1,6 @@
 # GPT Image Prompt Dialect (gpt-5-image and gpt-image-2)
 
-Model IDs: `openai/gpt-5.4-image-2` (newest hybrid, the default OpenAI slot — full aspect-ratio set), `openai/gpt-5-image` (older hybrid, AR limited to 1:1/3:2/2:3/auto), `openai/gpt-image-2` (dedicated Images-API model), `openai/gpt-5-image-mini` (cheap drafts). One dialect covers all of them.
+Model IDs: `openai/gpt-image-2` (newest OpenAI flagship, dedicated Images API, the default OpenAI slot — full aspect-ratio set), `openai/gpt-5.4-image-2` (hybrid reasoning+generation, full AR set), `openai/gpt-5-image` (older hybrid, AR limited to 1:1/3:2/2:3/auto), `openai/gpt-5-image-mini` (cheap drafts). One dialect covers all of them.
 
 ## gpt-5-image vs gpt-image-2 — know the difference
 

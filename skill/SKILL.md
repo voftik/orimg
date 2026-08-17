@@ -39,7 +39,7 @@ Full parameter and CLI reference: `references/api-parameters.md`.
 > 2. **Single mode** — one model, one image. Pick the model:
 >    - `google/gemini-3-pro-image` (Nano Banana Pro) — best text/infographics, ~$0.13
 >    - `bytedance-seed/seedream-5-0-pro` — poster-grade layouts and typography, ~$0.05
->    - `openai/gpt-5.4-image-2` — strictest instruction following, ~$0.05–0.19
+>    - `openai/gpt-image-2` — newest OpenAI flagship, strictest instruction following, ~$0.03–0.13
 >    - `x-ai/grok-imagine-image-2.0` — fast and cheap, social formats, ~$0.04
 >    - `google/gemini-3.1-flash-image` (Nano Banana 2) — budget all-rounder, ~$0.07
 
@@ -49,7 +49,7 @@ Do NOT ask when: the session is non-interactive/autonomous (default to compare m
 - *Compare mode* → steps 4–7 as written: per-model prompts, fan-out, gallery, winner selection.
 - *Single mode* → ONE job for the chosen model in its dialect; skip the gallery (`--no-gallery`) and the winner-selection scoring — deliver that image directly and report its cost. Variants within single mode = duplicate jobs for the SAME model with prompt variations, only if the user asks.
 
-**Composing the compare-mode set** — default four (current flagships): `bytedance-seed/seedream-5-0-pro` (Seedream 5 Pro), `google/gemini-3-pro-image` (Nano Banana Pro), `openai/gpt-5.4-image-2` (GPT-5.4 Image, full aspect-ratio set), `x-ai/grok-imagine-image-2.0` (Grok Imagine 2). Adjust the set using `references/model-guide.md` — e.g. typography-heavy posters favor Seedream + Gemini Pro; strict multi-object instructions favor the GPT slot; cheap drafts and social formats favor Grok / Gemini Flash. For drafts, 2 cheap models are enough; for a final deliverable keep 3–4. CAUTION: the older `openai/gpt-5-image` accepts only `1:1`/`3:2`/`2:3`/`auto` aspect ratios — for wide/tall formats keep `gpt-5.4-image-2` or `gpt-image-2` in the OpenAI slot. "Seedance" is ByteDance's VIDEO model, not an image model — for images the ByteDance slot is always Seedream.
+**Composing the compare-mode set** — default four (current flagships): `bytedance-seed/seedream-5-0-pro` (Seedream 5 Pro), `google/gemini-3-pro-image` (Nano Banana Pro), `openai/gpt-image-2` (GPT Image 2, newest OpenAI flagship, full aspect-ratio set), `x-ai/grok-imagine-image-2.0` (Grok Imagine 2). Adjust the set using `references/model-guide.md` — e.g. typography-heavy posters favor Seedream + Gemini Pro; strict multi-object instructions favor the GPT slot; cheap drafts and social formats favor Grok / Gemini Flash. For drafts, 2 cheap models are enough; for a final deliverable keep 3–4. CAUTION: the older `openai/gpt-5-image` accepts only `1:1`/`3:2`/`2:3`/`auto` aspect ratios — for wide/tall formats keep `gpt-image-2` (or `gpt-5.4-image-2`) in the OpenAI slot. "Seedance" is ByteDance's VIDEO model, not an image model — for images the ByteDance slot is always Seedream.
 
 ### 4. Write ONE prompt PER model, in its dialect
 First read `references/prompt-principles.md`, then the dialect file for EVERY chosen model (`references/seedream-5-pro.md`, `references/gemini-3-pro-image.md`, `references/gpt-5-image.md`, `references/grok-imagine-2.md`). Never reuse a single universal prompt across models — the dialects differ materially (Seedream wants a long organized narrative, GPT Image wants labeled sections, Grok needs a photo anchor in the first words, Gemini wants Google's narrative templates).
@@ -59,7 +59,7 @@ If the task mentions ANY existing image, person, object, product, logo or scene 
 
 - Local file → `"input_references": ["./photo.jpg"]` (the CLI base64-encodes it). Remote image → download it first, or pass the direct https URL.
 - The subject exists but you don't have the file ("me", "our product", "the hero from our site")? Find it in the project or download it from the site; if you can't — ask the user for the file. Never reconstruct a real subject from imagination.
-- Model choice for editing: `gemini-3-pro-image` (14 refs, conversational multi-turn) or `seedream-5-0-pro` (refs as ground truth, visual markup works); `gpt-5.4-image-2` for identity-sensitive edits (16 refs). Grok caps at 3 refs and local edits are weaker.
+- Model choice for editing: `gemini-3-pro-image` (14 refs, conversational multi-turn) or `seedream-5-0-pro` (refs as ground truth, visual markup works); `gpt-image-2` for identity-sensitive edits (16 refs). Grok caps at 3 refs and local edits are weaker.
 - Editing prompt pattern (all models): "Change only [X]. Keep everything else exactly the same, preserving [identity/pose/lighting/composition]." Repeat the preserve-list on every iteration; one change per turn.
 - Background removal: no model outputs true alpha. Pass the source as a reference and request "change only the background to a solid uniform white/green background, keep the subject pixel-identical", then the user keys/crops it — or use `background: "transparent"` where supported (gpt-image-1 only). Background REPLACEMENT is a normal edit: reference + "change only the background to […]".
 
@@ -74,7 +74,7 @@ Write a jobs file and run the CLI:
   "jobs": [
     { "model": "bytedance-seed/seedream-5-0-pro", "prompt": "<Seedream dialect>" },
     { "model": "google/gemini-3-pro-image", "prompt": "<Gemini dialect>" },
-    { "model": "openai/gpt-5.4-image-2", "prompt": "<labeled sections>" },
+    { "model": "openai/gpt-image-2", "prompt": "<labeled sections>" },
     { "model": "x-ai/grok-imagine-image-2.0", "prompt": "<photo anchor first>" }
   ]
 }
