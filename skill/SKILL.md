@@ -36,6 +36,15 @@ Default fan-out four (current flagships): `bytedance-seed/seedream-5-0-pro` (See
 ### 4. Write ONE prompt PER model, in its dialect
 First read `references/prompt-principles.md`, then the dialect file for EVERY chosen model (`references/seedream-5-pro.md`, `references/gemini-3-pro-image.md`, `references/gpt-5-image.md`, `references/grok-imagine-2.md`). Never reuse a single universal prompt across models — the dialects differ materially (Seedream wants a long organized narrative, GPT Image wants labeled sections, Grok needs a photo anchor in the first words, Gemini wants Google's narrative templates).
 
+### 4b. Reference images — mandatory whenever the task involves an existing visual
+If the task mentions ANY existing image, person, object, product, logo or scene — "remove the background", "the same character in a new scene", "edit this photo", "match our brand/style", "make a variation of this" — you MUST pass the source image(s) via `input_references` instead of describing them in words. Words lose identity; references preserve it.
+
+- Local file → `"input_references": ["./photo.jpg"]` (the CLI base64-encodes it). Remote image → download it first, or pass the direct https URL.
+- The subject exists but you don't have the file ("me", "our product", "the hero from our site")? Find it in the project or download it from the site; if you can't — ask the user for the file. Never reconstruct a real subject from imagination.
+- Model choice for editing: `gemini-3-pro-image` (14 refs, conversational multi-turn) or `seedream-5-0-pro` (refs as ground truth, visual markup works); `gpt-5.4-image-2` for identity-sensitive edits (16 refs). Grok caps at 3 refs and local edits are weaker.
+- Editing prompt pattern (all models): "Change only [X]. Keep everything else exactly the same, preserving [identity/pose/lighting/composition]." Repeat the preserve-list on every iteration; one change per turn.
+- Background removal: no model outputs true alpha. Pass the source as a reference and request "change only the background to a solid uniform white/green background, keep the subject pixel-identical", then the user keys/crops it — or use `background: "transparent"` where supported (gpt-image-1 only). Background REPLACEMENT is a normal edit: reference + "change only the background to […]".
+
 ### 5. Generate
 Write a jobs file and run the CLI:
 
