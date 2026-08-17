@@ -27,7 +27,7 @@ Google's official rule: **"Describe the scene, don't just list keywords."** A na
 3. Iterate conversationally: follow-ups like "make the lighting warmer" work (multi-turn editing is a Gemini strength).
 4. **Semantic negatives**: there is NO negative_prompt. Describe the desired state positively — "an empty, deserted street with no signs of traffic" instead of "no cars".
 5. Name concrete hardware, film stock, and lighting rigs — the model maps them to coherent looks: "shot on GoPro", "Fujifilm color science", "shallow depth of field (f/1.8)", "as if on 1980s color film, slightly grainy", "three-point softbox setup", "chiaroscuro lighting with harsh, high contrast", "golden hour backlighting".
-6. Describe the format in the prompt text as well as the `aspect_ratio` param ("a 9:16 vertical poster", "a cinematic 21:9 wide shot") — it steers where the model leaves negative space and how it stacks elements, not just the canvas shape.
+6. Reinforce the format with compositional WORDS on top of the `aspect_ratio` param ("a tall vertical poster", "a cinematic wide shot") — wording steers where the model leaves negative space and how it stacks elements. Keep numeric ratios ("9:16") out of the prompt text; the canvas itself is set only by the parameter.
 
 ## Text on the image
 
@@ -51,7 +51,7 @@ Google's official rule: **"Describe the scene, don't just list keywords."** A na
 - **One change per turn**: stacking several edits in a single prompt causes some to be silently dropped.
 - State what must NOT change in concrete terms ("Keep the pose and clothing identical", "Ensure that the features of [subject] remain completely unchanged"), not just "keep everything else the same". For removals add a fill instruction: "Remove the [object] from the image. Fill in the background naturally."
 - **Reference formula**: [Reference images] + [Relationship instruction] + [New scenario]. Name the role of EACH image explicitly: "Use Image A for the character's pose, Image B for the art style, Image C for the background."
-- Up to 14 reference images total (both 3-pro and 3.1-flash). Budget within the limit: 6–10 object images, 4–5 character images (cap at 5 for very high-fidelity character rendering), up to 3 style references.
+- Up to 14 reference images TOTAL (both 3-pro and 3.1-flash) — the hard cap; objects + characters + styles must sum to ≤ 14. Per-type maxima within that budget: up to 10 object images, up to 5 character images (5 is also the high-fidelity character limit), up to 3 style references. Example of a full valid mix: 8 objects + 4 characters + 2 styles = 14.
 - Character consistency across shots: pass reference images, not descriptions.
 
 ## Gemini-3 specifics

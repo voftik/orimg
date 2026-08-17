@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="orimg: one prompt, four frontier image models" width="100%" />
+  <img src="https://raw.githubusercontent.com/voftik/orimg/main/docs/assets/banner.svg" alt="orimg: one prompt, four frontier image models" width="100%" />
 </p>
 
 <h1 align="center">orimg</h1>
@@ -15,7 +15,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
   <img src="https://img.shields.io/badge/node-%3E%3D20-brightgreen" alt="Node >= 20">
   <img src="https://img.shields.io/badge/runtime%20deps-0-orange" alt="Zero dependencies">
-  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+  <a href="https://github.com/voftik/orimg/blob/main/CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
 </p>
 
 ---
@@ -32,7 +32,7 @@ $ orimg generate --jobs jobs.json
   ✓ openai/gpt-image-2                  hero-gpt-image-2-1.png          $0.098   19.8s
   ✓ x-ai/grok-imagine-image-2.0         hero-grok-imagine-2-0-1.png     $0.041    6.9s
 
-  4/4 models · total $0.387 · gallery: ai-images/20260817-hero/index.html
+  4/4 models · total $0.318 · gallery: ai-images/20260817-hero/index.html
 ```
 
 ## Get started in 60 seconds
@@ -73,26 +73,26 @@ One brief, *"a tiny robot artist painting the same sunset in four styles"*, disp
 
 | `google/gemini-3-pro-image` · $0.135 | `google/gemini-3.1-flash-image` · $0.068 | `google/gemini-2.5-flash-image` · $0.039 |
 |---|---|---|
-| ![Gemini 3 Pro](docs/assets/showcase/gemini-3-pro.jpg) | ![Gemini 3.1 Flash](docs/assets/showcase/gemini-3-1-flash.jpg) | ![Gemini 2.5 Flash](docs/assets/showcase/gemini-2-5-flash.jpg) |
+| ![Gemini 3 Pro](https://raw.githubusercontent.com/voftik/orimg/main/docs/assets/showcase/gemini-3-pro.jpg) | ![Gemini 3.1 Flash](https://raw.githubusercontent.com/voftik/orimg/main/docs/assets/showcase/gemini-3-1-flash.jpg) | ![Gemini 2.5 Flash](https://raw.githubusercontent.com/voftik/orimg/main/docs/assets/showcase/gemini-2-5-flash.jpg) |
 | Precise brief adherence: exactly 4 easels, 4 distinct styles | Richer character, denser scene | Went minimalist and painted **5** easels |
 
 Same words, three different artists. This is exactly why you fan out instead of betting on one model. Every batch also gets a self-contained `index.html` comparison gallery with per-variant prompts, parameters, real costs and timings.
 
 ## Why this exists
 
-There was no tool that does **multi-model fan-out with comparison**. We checked ([~15 OpenRouter image MCPs](https://github.com/search?q=openrouter+image+mcp), the official OpenRouter MCP, every image skill on the market):
+The ecosystem already has excellent single-model tools — orimg's contribution is putting the whole pipeline together. Here is the combination you get in one install:
 
 | | orimg | Official OpenRouter MCP | Single-model skills (nano-banana &amp; co) | Typical image MCP servers |
 |---|:---:|:---:|:---:|:---:|
-| Several models per request, in parallel | yes | no | no | no |
-| Per-model prompt dialects | yes | no | no | no |
-| Files on disk (agent-friendly) | yes | no, inline base64 | yes | varies |
+| Several models per request, in parallel | yes | one per request | one per request | one per request |
+| Per-model prompt dialects | yes | generic prompt | tuned for its one model | generic prompt |
+| Files on disk (agent-friendly) | yes | inline base64 | yes | varies |
 | Context cost per image in Claude Code | **~0 tokens** (path) | ~15–25k tokens¹ | ~0 | often 15–25k¹ |
-| HTML comparison gallery + manifest with real costs | yes | no | no | no |
-| Auto-activates in Claude Code **and** Codex | yes, skill | no | Claude only | no |
-| Autonomous winner selection | yes | no | no | no |
+| HTML comparison gallery + manifest with real costs | yes | not yet | not yet | not yet |
+| Auto-activates in Claude Code **and** Codex | yes, one skill | manual setup | varies (some added Codex) | manual setup |
+| Autonomous winner selection | yes | n/a (single result) | n/a (single result) | n/a (single result) |
 
-¹ MCP `ImageContent` results are counted as base64 text in Claude Code ([anthropics/claude-code#31208](https://github.com/anthropics/claude-code/issues/31208)). orimg never puts image bytes into the model context: agents get file paths and read only what they need.
+¹ MCP `ImageContent` results are counted as base64 text in Claude Code ([anthropics/claude-code#31208](https://github.com/anthropics/claude-code/issues/31208)); orimg keeps image bytes out of the model context, so agents read only what they need. Comparison snapshot: August 2026.
 
 ## Features
 
@@ -101,9 +101,9 @@ There was no tool that does **multi-model fan-out with comparison**. We checked 
 - **Agent-native**: auto-activating skill for Claude Code (`~/.claude/skills`) and Codex (`~/.agents/skills`); stable JSON envelope, distinct exit codes, absolute paths.
 - **Comparison gallery**: a self-contained `index.html` per batch shows every variant with its model, parameters, cost and timing, side by side.
 - **Honest manifests**: `manifest.json` records prompts, seeds, per-job **actual** cost from `usage.cost`, and timings.
-- **Cost-aware**: `--dry-run` estimates before spending; the default four cost ≈ $0.35 per full fan-out.
+- **Cost-aware**: `--dry-run` estimates before spending; the default four cost ≈ $0.32 per full fan-out.
 - **Zero runtime dependencies**: built-in `fetch` and `node:util` parseArgs. Install fast, audit in one sitting.
-- **Any OpenRouter model**: 48 image models and counting; unknown IDs pass through, `orimg models --search flux` to discover.
+- **Any OpenRouter model**: the full OpenRouter image catalog (43 models as of Aug 2026, and it moves both ways); unknown IDs pass through, `orimg models --search flux` to discover.
 
 ## Using the CLI directly
 
@@ -198,7 +198,7 @@ The skill ships with prompt-engineering guides sourced from the official Google,
     "images": [{ "model": "…", "path": "/abs/….png", "cost_usd": 0.045,
                  "duration_ms": 14200, "params": { "aspect_ratio": "16:9" } }],
     "failed": [{ "model": "…", "error": "…", "code": "TIMEOUT", "retries": 2 }],
-    "totals": { "cost_usd": 0.387, "images": 4, "failed": 0 }
+    "totals": { "cost_usd": 0.318, "images": 4, "failed": 0 }
   },
   "error": null }
 ```
@@ -254,7 +254,7 @@ Parameter support differs per model: `openai/gpt-5-image` only accepts `1:1`/`3:
 
 ## Contributing
 
-PRs are very welcome. This project was born from the gap between what agents need and what exists. Good first issues: new model dialect guides, gallery UX, provider quirks. See [CONTRIBUTING.md](CONTRIBUTING.md).
+PRs are very welcome. This project was born from the gap between what agents need and what exists. Good first issues: new model dialect guides, gallery UX, provider quirks. See [CONTRIBUTING.md](https://github.com/voftik/orimg/blob/main/CONTRIBUTING.md).
 
 ```bash
 git clone https://github.com/voftik/orimg && cd orimg

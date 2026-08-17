@@ -31,6 +31,7 @@ The jobs file is the canonical way to run a fan-out: each model gets its OWN pro
 | `jobs[].resolution` | string | `512` \| `1K` \| `2K` \| `4K` (uppercase K) |
 | `jobs[].quality` | string | `auto` \| `low` \| `medium` \| `high` |
 | `jobs[].output_format` | string | `png` (default) \| `jpeg` \| `webp` \| `svg` |
+| `jobs[].background` | string | `auto` \| `transparent` \| `opaque`. Rarely supported — check `orimg models <id>` (as of Aug 2026 the `openai/gpt-image-1` family declares `transparent`) |
 | `jobs[].seed` | number | Reproducibility, where supported (Seedream yes; Gemini/Grok no) |
 | `jobs[].input_references` | string[] | Local paths or URLs for image-to-image / editing; the CLI base64-encodes local files. Per-model caps: 3–16 |
 
@@ -42,7 +43,7 @@ Per-job fields override `defaults`. Omit fields you do not use — `null` is acc
 
 - `gemini-3-pro-image` supports the first 10; `gemini-3.1-flash-image` adds extremes `1:4`, `4:1`, `1:8`, `8:1`; Grok adds the phone formats (`19.5:9`, `9:20`, ...); Seedream is the widest (extreme ratios up to 16:1/1:16).
 - **OpenAI caveat**: `openai/gpt-5-image` accepts ONLY `1:1`, `3:2`, `2:3`, `auto` — a 16:9 job fails with HTTP 400. For wide/tall formats use `openai/gpt-image-2` (full set incl. `16:9`, `9:16`, `21:9`).
-- Never encode the aspect ratio in prompt text — parameters only.
+- Never encode the aspect ratio numerically in prompt text (parameters only); compositional wording like "a vertical poster" or "a wide shot" is allowed and useful.
 
 ## CLI commands
 

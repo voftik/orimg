@@ -178,6 +178,16 @@ test("npm pack tarball contains every file the package promises", async () => {
   assert.equal(r.code, 0);
   const [report] = JSON.parse(r.stdout);
   const files = report.files.map((f) => f.path);
+  // Issue #14 guard: every relative link target in the packaged README must ship in the tarball.
+  const readme = await readFile(path.join(ROOT, "README.md"), "utf8");
+  const relTargets = [
+    ...readme.matchAll(/\]\((?!https?:|#)([^)\s]+)\)/g),
+    ...readme.matchAll(/(?:src|href)="(?!https?:|#)([^"]+)"/g),
+  ].map((m) => m[1]);
+  for (const target of relTargets) {
+    assert.ok(files.includes(target), `packaged README links to "${target}" which is not in the tarball`);
+  }
+
   for (const required of [
     "dist/cli.js",
     "dist/index.js",

@@ -18,7 +18,7 @@ Generate images by sending a tailored, model-specific prompt to several top imag
 Determine: **subject** (what exactly to depict), **purpose/placement** (hero section, favicon, README, ad, story), and **style**. Infer style from the project — read neighboring CSS / design-token / brand files (colors, fonts, tone) and look at existing images before writing any prompt.
 
 ### 2. Pick generation parameters
-Choose from this table. Set size ONLY via API parameters — NEVER put dimensions, aspect ratios, or words like "4K/8K" into prompt text.
+Choose from this table. Set the canvas ONLY via API parameters: never put numeric dimensions, ratio strings (16:9, 1920x1080) or "4K/8K" into prompt text. Compositional WORDS ("a tall vertical poster", "a cinematic wide shot") are fine where a dialect recommends them — they steer framing, not the canvas.
 
 | Use case | aspect_ratio | resolution | quality |
 |---|---|---|---|
@@ -61,7 +61,7 @@ If the task mentions ANY existing image, person, object, product, logo or scene 
 - The subject exists but you don't have the file ("me", "our product", "the hero from our site")? Find it in the project or download it from the site; if you can't — ask the user for the file. Never reconstruct a real subject from imagination.
 - Model choice for editing: `gemini-3-pro-image` (14 refs, conversational multi-turn) or `seedream-5-0-pro` (refs as ground truth, visual markup works); `gpt-image-2` for identity-sensitive edits (16 refs). Grok caps at 3 refs and local edits are weaker.
 - Editing prompt pattern (all models): "Change only [X]. Keep everything else exactly the same, preserving [identity/pose/lighting/composition]." Repeat the preserve-list on every iteration; one change per turn.
-- Background removal: no model outputs true alpha. Pass the source as a reference and request "change only the background to a solid uniform white/green background, keep the subject pixel-identical", then the user keys/crops it — or use `background: "transparent"` where supported (gpt-image-1 only). Background REPLACEMENT is a normal edit: reference + "change only the background to […]".
+- Background removal, two routes. (a) True alpha channel: set `background: "transparent"` with `output_format: "png"` on a model whose catalog entry declares the `background` parameter — run `orimg models <id>` to check (as of Aug 2026: the `openai/gpt-image-1` family; most flagships do NOT declare it). (b) Everywhere else: pass the source as a reference and request "change only the background to a solid uniform white/green background, keep the subject pixel-identical", then the user keys/crops it. Background REPLACEMENT is a normal edit on any model: reference + "change only the background to […]".
 
 ### 5. Generate
 Write a jobs file and run the CLI:
@@ -100,7 +100,7 @@ Read actual per-job and total `cost_usd` from the manifest (or the JSON envelope
 
 **Choose yourself** when ANY of these hold: the user told you to work autonomously; the image is an intermediate asset in a larger task; the session is headless/non-interactive. To choose:
 
-1. Read each generated image (Read tool on each file).
+1. Inspect each generated image with your host's image-viewing tool (Claude Code: `Read`; Codex: `view_image`).
 2. Score each 1–5 on: (a) brief adherence, (b) exact text rendering, (c) composition for the target placement, (d) artifacts/anatomy, (e) style fit.
 3. Copy the winner into place: `orimg select <batch-dir> <model-or-filename> --to <dest-path>`.
 4. Report in one line which model won and why. On a tie, pick the cheaper one.
