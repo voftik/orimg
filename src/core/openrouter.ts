@@ -198,7 +198,7 @@ export class OpenRouterClient {
         output_format: req.output_format,
         background: req.background,
         seed: req.seed,
-        input_references: req.input_references,
+        input_references: req.input_references?.map((url) => ({ type: "image_url", image_url: { url } })),
       }),
     );
 

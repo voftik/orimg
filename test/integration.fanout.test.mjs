@@ -380,8 +380,12 @@ test("quick mode -m/-p with input reference encodes local file as data url", asy
     assert.equal(result.code, 0, result.stderr);
 
     const imageRequest = mock.state.requests.find((r) => r.route === "POST /api/v1/images");
-    assert.ok(imageRequest.body.input_references[0].startsWith("data:image/png;base64,"), "local path becomes data url");
-    assert.equal(imageRequest.body.input_references[1], "https://example.com/other.png", "http url passes through");
+    assert.equal(imageRequest.body.input_references[0].type, "image_url");
+    assert.ok(
+      imageRequest.body.input_references[0].image_url.url.startsWith("data:image/png;base64,"),
+      "local path becomes data url",
+    );
+    assert.equal(imageRequest.body.input_references[1].image_url.url, "https://example.com/other.png", "http url passes through");
 
     const manifest = JSON.parse(await readFile(JSON.parse(result.stdout).data.manifest, "utf8"));
     assert.deepEqual(
