@@ -30,8 +30,26 @@ Choose from this table. Set size ONLY via API parameters — NEVER put dimension
 
 Full parameter and CLI reference: `references/api-parameters.md`.
 
-### 3. Pick models
-Default fan-out four (current flagships): `bytedance-seed/seedream-5-0-pro` (Seedream 5 Pro), `google/gemini-3-pro-image` (Nano Banana Pro), `openai/gpt-5.4-image-2` (GPT-5.4 Image, full aspect-ratio set), `x-ai/grok-imagine-image-2.0` (Grok Imagine 2). Adjust the set using `references/model-guide.md` — e.g. typography-heavy posters favor Seedream + Gemini Pro; strict multi-object instructions favor the GPT slot; cheap drafts and social formats favor Grok / Gemini Flash. For drafts, 2 cheap models are enough; for a final deliverable keep 3–4. CAUTION: the older `openai/gpt-5-image` accepts only `1:1`/`3:2`/`2:3`/`auto` aspect ratios — for wide/tall formats keep `gpt-5.4-image-2` or `gpt-image-2` in the OpenAI slot. "Seedance" is ByteDance's VIDEO model, not an image model — for images the ByteDance slot is always Seedream.
+### 3. Session mode, then models
+
+**On the FIRST image request of an interactive session, ask the user ONE short question** (use your platform's question tool if it has one) and remember the answer as the session mode:
+
+> Generate several variants with different models to compare, or a single image with one model?
+> 1. **Compare mode** — fan out to 3–5 top models, you pick the best from a gallery (~$0.3–0.5/batch)
+> 2. **Single mode** — one model, one image. Pick the model:
+>    - `google/gemini-3-pro-image` (Nano Banana Pro) — best text/infographics, ~$0.13
+>    - `bytedance-seed/seedream-5-0-pro` — poster-grade layouts and typography, ~$0.05
+>    - `openai/gpt-5.4-image-2` — strictest instruction following, ~$0.05–0.19
+>    - `x-ai/grok-imagine-image-2.0` — fast and cheap, social formats, ~$0.04
+>    - `google/gemini-3.1-flash-image` (Nano Banana 2) — budget all-rounder, ~$0.07
+
+Do NOT ask when: the session is non-interactive/autonomous (default to compare mode; for drafts — 2 cheap models); the user already said how many variants or named a model; or the session mode was already chosen — **follow the chosen mode for ALL subsequent image requests in the session without re-asking**. Re-ask only if the user explicitly changes their mind or asks for something the mode cannot deliver (e.g. "show me options" while in single mode — confirm switching).
+
+**Mode consequences downstream:**
+- *Compare mode* → steps 4–7 as written: per-model prompts, fan-out, gallery, winner selection.
+- *Single mode* → ONE job for the chosen model in its dialect; skip the gallery (`--no-gallery`) and the winner-selection scoring — deliver that image directly and report its cost. Variants within single mode = duplicate jobs for the SAME model with prompt variations, only if the user asks.
+
+**Composing the compare-mode set** — default four (current flagships): `bytedance-seed/seedream-5-0-pro` (Seedream 5 Pro), `google/gemini-3-pro-image` (Nano Banana Pro), `openai/gpt-5.4-image-2` (GPT-5.4 Image, full aspect-ratio set), `x-ai/grok-imagine-image-2.0` (Grok Imagine 2). Adjust the set using `references/model-guide.md` — e.g. typography-heavy posters favor Seedream + Gemini Pro; strict multi-object instructions favor the GPT slot; cheap drafts and social formats favor Grok / Gemini Flash. For drafts, 2 cheap models are enough; for a final deliverable keep 3–4. CAUTION: the older `openai/gpt-5-image` accepts only `1:1`/`3:2`/`2:3`/`auto` aspect ratios — for wide/tall formats keep `gpt-5.4-image-2` or `gpt-image-2` in the OpenAI slot. "Seedance" is ByteDance's VIDEO model, not an image model — for images the ByteDance slot is always Seedream.
 
 ### 4. Write ONE prompt PER model, in its dialect
 First read `references/prompt-principles.md`, then the dialect file for EVERY chosen model (`references/seedream-5-pro.md`, `references/gemini-3-pro-image.md`, `references/gpt-5-image.md`, `references/grok-imagine-2.md`). Never reuse a single universal prompt across models — the dialects differ materially (Seedream wants a long organized narrative, GPT Image wants labeled sections, Grok needs a photo anchor in the first words, Gemini wants Google's narrative templates).
@@ -75,6 +93,8 @@ Follow the decision rule below: either show the gallery and ask, or evaluate and
 Read actual per-job and total `cost_usd` from the manifest (or the JSON envelope `totals`) and state the real spend in your report. Never estimate when actuals are available.
 
 ## Decision: show the user vs. choose yourself
+
+*(Compare mode only. In single mode there is nothing to pick — deliver the image directly.)*
 
 **Show the gallery and ask** when ALL of these hold: the session is interactive, AND the image is itself the deliverable, AND the user gave no instruction to act autonomously. Give the user the gallery path (`index.html`) and per-model file paths, and wait for their pick.
 
